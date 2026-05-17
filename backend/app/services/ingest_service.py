@@ -99,19 +99,42 @@ async def index_document(document_id: UUID, raw_bytes: bytes, filename: str) -> 
             giga = get_gigachat()
             qdrant = await get_qdrant()
 
-            # Batch embeddings to keep request size sane
-            BATCH = 16
-            for i in range(0, len(db_chunks), BATCH):
-                batch = db_chunks[i : i + BATCH]
-                texts = [c.content for c in batch]
-                vectors = await giga.embed(texts)
+            # GigaChat /embeddings has a hard limit on total tokens per request.
+            # With rag_chunk_size=900 tokens, even 8 chunks can exceed it on
+            # docs with long paragraphs. We start with a conservative batch
+            # of 4 and auto-halve on 413 Payload Too Large.
+            BATCH = 4
+            i = 0
+            while i < len(db_chunks):
+                current_batch = BATCH
+                while True:
+                    batch = db_chunks[i : i + current_batch]
+                    texts = [c.content for c in batch]
+                    try:
+                        vectors = await giga.embed(texts)
+                        break  # success — leave the retry loop
+                    except Exception as e:  # noqa: BLE001
+                        # 413 from GigaChat: payload too large. Halve and retry.
+                        msg = str(e)
+                        if "413" in msg and current_batch > 1:
+                            current_batch = max(1, current_batch // 2)
+                            log.warning(
+                                f"Document {doc.id}: 413 from GigaChat, "
+                                f"retrying with batch={current_batch}"
+                            )
+                            continue
+                        raise  # other errors → fail the document
                 payloads = [_build_payload(doc, c) for c in batch]
                 await qdrant.upsert_chunks(
                     chunk_ids=[c.id for c in batch],
                     embeddings=vectors,
                     payloads=payloads,
                 )
-                log.info(f"Document {doc.id}: indexed {min(i + BATCH, len(db_chunks))}/{len(db_chunks)}")
+                log.info(
+                    f"Document {doc.id}: indexed "
+                    f"{min(i + current_batch, len(db_chunks))}/{len(db_chunks)}"
+                )
+                i += current_batch
 
             doc.chunk_count = len(db_chunks)
             await _set_status(db, doc, DocumentStatus.INDEXED)
