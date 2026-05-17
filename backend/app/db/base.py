@@ -53,12 +53,21 @@ class TimestampMixin:
 
 
 # ---------- Engine and session ----------
+# Supabase Transaction Pooler (port 6543) uses PgBouncer which does NOT support
+# asyncpg prepared statements. We disable statement caching and pass a unique
+# prepared-statement name to make asyncpg behave well behind PgBouncer.
+# See: https://magicstack.github.io/asyncpg/current/api/index.html#asyncpg.connection.Connection
 engine = create_async_engine(
     settings.database_url,
     echo=settings.debug,
     pool_pre_ping=True,
     pool_size=5,
     max_overflow=10,
+    connect_args={
+        "statement_cache_size": 0,
+        "prepared_statement_cache_size": 0,
+        "server_settings": {"jit": "off"},
+    },
 )
 
 AsyncSessionLocal = async_sessionmaker(
