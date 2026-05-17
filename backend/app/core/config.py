@@ -64,6 +64,11 @@ class Settings(BaseSettings):
     gigachat_embeddings_model: str = "Embeddings"
     gigachat_base_url: str = "https://gigachat.devices.sberbank.ru/api/v1"
     gigachat_auth_url: str = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
+    # GigaChat uses Russian Trusted Root CA (Минцифры), not in default trust store
+    # on most Linux images. Set to False to skip SSL verification (acceptable for
+    # MVP, as we only talk to Sber domains). For production, install the cert
+    # and keep True.
+    gigachat_verify_ssl: bool = True
 
     # ---------- RAG ----------
     rag_top_k_retrieval: int = 15
