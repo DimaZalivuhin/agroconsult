@@ -75,8 +75,12 @@ class Settings(BaseSettings):
     rag_top_k_context: int = 6
     rag_max_context_tokens: int = 4000
     rag_temperature: float = 0.2
-    rag_chunk_size: int = 900
-    rag_chunk_overlap: int = 150
+    # rag_chunk_size of 900 was too aggressive: GigaChat /embeddings rejects
+    # inputs larger than ~514 tokens with 413 Payload Too Large. We target
+    # 450 tokens per chunk with 90 overlap — fits comfortably under the limit
+    # and gives more focused retrieval as a bonus.
+    rag_chunk_size: int = 450
+    rag_chunk_overlap: int = 90
 
     # ---------- Admin ----------
     admin_email: str = "admin@agroconsult.local"
