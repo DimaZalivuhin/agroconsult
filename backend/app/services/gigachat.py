@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import time
+import urllib3
 import uuid
 from typing import AsyncIterator, Optional
 
@@ -22,6 +23,12 @@ from app.core.config import settings
 from app.core.logging import get_logger
 
 log = get_logger("gigachat")
+
+# Silence urllib3 warning when GIGACHAT_VERIFY_SSL=false. We accept this risk
+# explicitly because Sber's Russian Trusted Root CA isn't in default Linux
+# trust stores, and we only call known Sber endpoints.
+if not settings.gigachat_verify_ssl:
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class GigaChatError(RuntimeError):
@@ -51,9 +58,13 @@ class GigaChatClient:
         self._token_expires_at: float = 0.0
         self._lock = asyncio.Lock()
 
-        # GigaChat uses a self-signed root CA chain; verify=True is fine for prod
-        # but in some setups the chain isn't trusted on Railway. Configurable here.
-        self._client = httpx.AsyncClient(timeout=60.0, verify=True)
+        # GigaChat uses Russian Trusted Root CA (Минцифры). On Linux images
+        # without this cert in the trust store, OAuth fails with
+        # "self-signed certificate in certificate chain". Configurable via env.
+        self._client = httpx.AsyncClient(
+            timeout=60.0,
+            verify=settings.gigachat_verify_ssl,
+        )
 
     async def close(self) -> None:
         await self._client.aclose()
