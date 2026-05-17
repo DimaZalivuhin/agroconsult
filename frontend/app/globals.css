@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 150 10% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 150 10% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 10% 12%;
+    --primary: 142 35% 32%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 145 12% 95%;
+    --secondary-foreground: 150 12% 18%;
+    --muted: 145 8% 96%;
+    --muted-foreground: 150 6% 42%;
+    --accent: 142 28% 92%;
+    --accent-foreground: 142 35% 22%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 145 10% 89%;
+    --input: 145 10% 89%;
+    --ring: 142 35% 32%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 150 12% 8%;
+    --foreground: 145 6% 92%;
+    --card: 150 12% 10%;
+    --card-foreground: 145 6% 92%;
+    --popover: 150 12% 10%;
+    --popover-foreground: 145 6% 92%;
+    --primary: 142 40% 45%;
+    --primary-foreground: 150 12% 8%;
+    --secondary: 150 8% 16%;
+    --secondary-foreground: 145 6% 92%;
+    --muted: 150 8% 16%;
+    --muted-foreground: 145 6% 64%;
+    --accent: 142 25% 22%;
+    --accent-foreground: 145 30% 88%;
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 145 6% 92%;
+    --border: 150 8% 18%;
+    --input: 150 8% 18%;
+    --ring: 142 40% 45%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}
+
+/* Custom prose tweaks for the answer rendering */
+.answer-prose p { @apply mb-3 leading-relaxed; }
+.answer-prose strong { @apply font-medium; }
+.answer-prose ul { @apply list-disc pl-6 mb-3 space-y-1; }
+.answer-prose ol { @apply list-decimal pl-6 mb-3 space-y-1; }
+.answer-prose h2 { @apply text-base font-medium mt-4 mb-2; }
+.answer-prose h3 { @apply text-sm font-medium mt-3 mb-2 text-muted-foreground; }
+.answer-prose code { @apply bg-muted px-1.5 py-0.5 rounded text-xs; }
+
+.citation {
+  @apply inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1
+         text-xs font-medium bg-primary/10 text-primary rounded
+         hover:bg-primary/20 cursor-pointer transition-colors;
+}

@@ -1,0 +1,322 @@
+# Manifest of legal documents to seed.
+# Each entry corresponds to a file in data/corpus_raw/.
+# Used by scripts/seed_documents.py.
+
+documents:
+  # --- Федеральные законы ---
+  - filename: "fz_264_razvitie_sh.txt"
+    title: "Федеральный закон от 29.12.2006 № 264-ФЗ «О развитии сельского хозяйства»"
+    short_title: "ФЗ № 264-ФЗ"
+    doc_type: federal_law
+    doc_number: "264-ФЗ"
+    doc_date: 2006-12-29
+    issuing_body: "Государственная Дума РФ"
+    source_url: "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102110906"
+    tags: ["framework", "agriculture", "policy"]
+    target_farm_types: ["kfh", "lph", "ip", "ooo", "coop"]
+    summary: "Базовый закон, определяющий правовые основы государственной аграрной политики и устанавливающий рамки мер господдержки сельхозпроизводителей."
+
+  - filename: "fz_74_kfh.txt"
+    title: "Федеральный закон от 11.06.2003 № 74-ФЗ «О крестьянском (фермерском) хозяйстве»"
+    short_title: "ФЗ № 74-ФЗ"
+    doc_type: federal_law
+    doc_number: "74-ФЗ"
+    doc_date: 2003-06-11
+    issuing_body: "Государственная Дума РФ"
+    source_url: "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102081842"
+    tags: ["kfh", "legal_form"]
+    target_farm_types: ["kfh", "ip"]
+    summary: "Определяет правовой статус крестьянского (фермерского) хозяйства, порядок его создания, имущественные отношения и регулирование деятельности."
+
+  - filename: "fz_112_lph.txt"
+    title: "Федеральный закон от 07.07.2003 № 112-ФЗ «О личном подсобном хозяйстве»"
+    short_title: "ФЗ № 112-ФЗ"
+    doc_type: federal_law
+    doc_number: "112-ФЗ"
+    doc_date: 2003-07-07
+    issuing_body: "Государственная Дума РФ"
+    source_url: "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102081858"
+    tags: ["lph", "legal_form"]
+    target_farm_types: ["lph"]
+    summary: "Регулирует деятельность личных подсобных хозяйств, права граждан на ведение ЛПХ и меры господдержки."
+
+  - filename: "fz_209_msb.txt"
+    title: "Федеральный закон от 24.07.2007 № 209-ФЗ «О развитии малого и среднего предпринимательства»"
+    short_title: "ФЗ № 209-ФЗ"
+    doc_type: federal_law
+    doc_number: "209-ФЗ"
+    doc_date: 2007-07-24
+    issuing_body: "Государственная Дума РФ"
+    source_url: "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102115929"
+    tags: ["msb", "small_business"]
+    target_farm_types: ["kfh", "ip", "ooo"]
+    summary: "Устанавливает критерии отнесения к субъектам МСП и общие меры поддержки малого и среднего бизнеса, применимые в том числе к КФХ."
+
+  - filename: "fz_260_agrostrah.txt"
+    title: "Федеральный закон от 25.07.2011 № 260-ФЗ «О государственной поддержке в сфере сельскохозяйственного страхования»"
+    short_title: "ФЗ № 260-ФЗ"
+    doc_type: federal_law
+    doc_number: "260-ФЗ"
+    doc_date: 2011-07-25
+    issuing_body: "Государственная Дума РФ"
+    source_url: "http://pravo.gov.ru/proxy/ips/?docbody=&nd=102149365"
+    tags: ["insurance", "risk_management"]
+    target_farm_types: ["kfh", "ooo", "coop"]
+    summary: "Регламентирует государственную поддержку при страховании сельскохозяйственных культур, посадок и животных."
+
+  # --- Постановления Правительства РФ ---
+  - filename: "pp_717_gosprogramma.txt"
+    title: "Постановление Правительства РФ от 14.07.2012 № 717 «О Государственной программе развития сельского хозяйства и регулирования рынков сельскохозяйственной продукции, сырья и продовольствия»"
+    short_title: "ПП РФ № 717"
+    doc_type: government_decree
+    doc_number: "717"
+    doc_date: 2012-07-14
+    issuing_body: "Правительство РФ"
+    source_url: "http://government.ru/docs/all/83104/"
+    tags: ["state_program", "framework"]
+    target_farm_types: ["kfh", "lph", "ip", "ooo", "coop"]
+    summary: "Главная государственная программа развития сельского хозяйства РФ, объединяющая большинство федеральных мер поддержки АПК."
+
+  - filename: "pp_1528_credit.txt"
+    title: "Постановление Правительства РФ от 29.12.2016 № 1528 «Об утверждении Правил предоставления из федерального бюджета субсидий российским кредитным организациям ... в целях льготного кредитования»"
+    short_title: "ПП РФ № 1528"
+    doc_type: government_decree
+    doc_number: "1528"
+    doc_date: 2016-12-29
+    issuing_body: "Правительство РФ"
+    source_url: "http://government.ru/docs/all/110164/"
+    tags: ["credit", "loan", "preferential"]
+    target_farm_types: ["kfh", "ip", "ooo", "coop"]
+    summary: "Регулирует льготное кредитование сельхозтоваропроизводителей: краткосрочные и инвестиционные кредиты по льготной ставке."
+
+  - filename: "pp_1104_subsidies.txt"
+    title: "Постановление Правительства РФ от 14.07.2021 № 1104 «О предоставлении и распределении ... субсидий ... в целях оказания государственной поддержки сельскохозяйственного производства»"
+    short_title: "ПП РФ № 1104"
+    doc_type: government_decree
+    doc_number: "1104"
+    doc_date: 2021-07-14
+    issuing_body: "Правительство РФ"
+    source_url: "http://government.ru/docs/all/135267/"
+    tags: ["subsidy", "compensation", "stimulus"]
+    target_farm_types: ["kfh", "lph", "ip", "ooo", "coop"]
+    summary: "Устанавливает порядок предоставления компенсирующих и стимулирующих субсидий регионам на поддержку сельхозпроизводства."
+
+  - filename: "pp_1567_selskaya_ipoteka.txt"
+    title: "Постановление Правительства РФ от 30.11.2019 № 1567 «Об утверждении Правил предоставления субсидий ... по льготным ипотечным жилищным кредитам (займам), предоставленным гражданам РФ, проживающим на сельских территориях»"
+    short_title: "ПП РФ № 1567"
+    doc_type: government_decree
+    doc_number: "1567"
+    doc_date: 2019-11-30
+    issuing_body: "Правительство РФ"
+    source_url: "http://government.ru/docs/all/125267/"
+    tags: ["mortgage", "rural", "housing"]
+    target_farm_types: ["kfh", "lph", "ip"]
+    summary: "Льготная сельская ипотека: ставка до 3% годовых на покупку или строительство жилья на сельских территориях."
+
+  - filename: "pp_696_krst.txt"
+    title: "Постановление Правительства РФ от 31.05.2019 № 696 «Об утверждении государственной программы РФ „Комплексное развитие сельских территорий“»"
+    short_title: "ПП РФ № 696"
+    doc_type: government_decree
+    doc_number: "696"
+    doc_date: 2019-05-31
+    issuing_body: "Правительство РФ"
+    source_url: "http://government.ru/docs/all/122122/"
+    tags: ["rural_development", "infrastructure"]
+    target_farm_types: ["kfh", "lph", "ip", "ooo", "coop"]
+    summary: "Госпрограмма КРСТ: благоустройство сельских территорий, жильё, инженерная инфраструктура, поддержка занятости на селе."
+
+  - filename: "pp_1873_plemennoe.txt"
+    title: "Постановление Правительства РФ от 27.12.2019 № 1873 «Об утверждении Правил предоставления ... субсидий ... на поддержку племенного животноводства»"
+    short_title: "ПП РФ № 1873"
+    doc_type: government_decree
+    doc_number: "1873"
+    doc_date: 2019-12-27
+    issuing_body: "Правительство РФ"
+    target_farm_types: ["kfh", "ooo", "coop"]
+    target_directions: ["livestock", "dairy", "meat"]
+    tags: ["livestock", "breeding"]
+    summary: "Поддержка племенного животноводства: субсидии на содержание племенного маточного поголовья."
+
+  - filename: "pp_1313_moloko.txt"
+    title: "Постановление Правительства РФ № 1313 «О поддержке производства и реализации молока»"
+    short_title: "ПП РФ № 1313"
+    doc_type: government_decree
+    doc_number: "1313"
+    doc_date: 2020-09-04
+    issuing_body: "Правительство РФ"
+    target_farm_types: ["kfh", "ip", "ooo", "coop"]
+    target_directions: ["dairy"]
+    tags: ["dairy", "milk"]
+    summary: "Стимулирование производства молока через субсидирование части затрат."
+
+  - filename: "pp_1404_export.txt"
+    title: "Постановление Правительства РФ № 1404 «О поддержке экспорта продукции АПК»"
+    short_title: "ПП РФ № 1404"
+    doc_type: government_decree
+    doc_number: "1404"
+    doc_date: 2019-09-25
+    issuing_body: "Правительство РФ"
+    target_farm_types: ["ip", "ooo", "coop"]
+    tags: ["export", "international"]
+    summary: "Меры финансовой поддержки сельхозпроизводителей-экспортёров."
+
+  - filename: "pp_922_agrostrah.txt"
+    title: "Постановление Правительства РФ № 922 «Об утверждении Правил предоставления ... субсидий ... в области сельскохозяйственного страхования»"
+    short_title: "ПП РФ № 922"
+    doc_type: government_decree
+    doc_number: "922"
+    doc_date: 2019-07-22
+    issuing_body: "Правительство РФ"
+    target_farm_types: ["kfh", "ooo", "coop"]
+    tags: ["insurance", "risk"]
+    summary: "Субсидирование части затрат на уплату страховой премии при агростраховании."
+
+  - filename: "pp_1043_capex.txt"
+    title: "Постановление Правительства РФ № 1043 «О предоставлении субсидий ... в целях компенсации части прямых понесённых затрат на создание и модернизацию объектов АПК»"
+    short_title: "ПП РФ № 1043"
+    doc_type: government_decree
+    doc_number: "1043"
+    doc_date: 2018-09-06
+    issuing_body: "Правительство РФ"
+    target_farm_types: ["kfh", "ooo", "coop"]
+    tags: ["capex", "investment", "modernization"]
+    summary: "CAPEX-субсидии: компенсация до 25% прямых затрат на создание и модернизацию объектов АПК."
+
+  # --- Приказы Минсельхоза России ---
+  - filename: "prikaz_msh_agrostartup.txt"
+    title: "Приказ Минсельхоза России о порядке предоставления грантов «Агростартап»"
+    short_title: "Приказ Минсельхоза «Агростартап»"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_farm_types: ["kfh", "ip"]
+    tags: ["grant", "agrostart", "beginner"]
+    summary: "Грант «Агростартап» — до 5 млн ₽ начинающим фермерам на создание и развитие крестьянского (фермерского) хозяйства."
+
+  - filename: "prikaz_msh_family_farm.txt"
+    title: "Приказ Минсельхоза России о порядке предоставления грантов «Семейная ферма»"
+    short_title: "Приказ Минсельхоза «Семейная ферма»"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_farm_types: ["kfh"]
+    tags: ["grant", "family_farm"]
+    target_directions: ["livestock", "dairy", "meat", "poultry"]
+    summary: "Грант «Семейная ферма» — до 30 млн ₽ КФХ на развитие животноводческой деятельности."
+
+  - filename: "prikaz_msh_agroprogress.txt"
+    title: "Приказ Минсельхоза России о порядке предоставления грантов «Агропрогресс»"
+    short_title: "Приказ Минсельхоза «Агропрогресс»"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_farm_types: ["ooo", "ip"]
+    tags: ["grant", "agroprogress", "investment"]
+    summary: "Грант «Агропрогресс» — до 30 млн ₽ малым с/х организациям на реализацию инвестиционных проектов."
+
+  - filename: "prikaz_msh_agroturism.txt"
+    title: "Приказ Минсельхоза России о порядке предоставления грантов «Агротуризм»"
+    short_title: "Приказ Минсельхоза «Агротуризм»"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_farm_types: ["kfh", "ip", "ooo"]
+    tags: ["grant", "agrotourism", "diversification"]
+    summary: "Грант «Агротуризм» — до 10 млн ₽ на развитие сельского туризма как направления диверсификации."
+
+  - filename: "prikaz_msh_kooperativy.txt"
+    title: "Приказ Минсельхоза России о поддержке сельскохозяйственных потребительских кооперативов"
+    short_title: "Приказ Минсельхоза по кооперативам"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_farm_types: ["coop"]
+    tags: ["cooperative", "support"]
+    summary: "Меры финансовой поддержки сельскохозяйственных потребительских кооперативов: гранты, субсидии."
+
+  - filename: "prikaz_msh_moloko_subsidy.txt"
+    title: "Приказ Минсельхоза России о субсидиях на производство и реализацию молока"
+    short_title: "Приказ Минсельхоза по молоку"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_directions: ["dairy"]
+    tags: ["dairy", "milk", "subsidy"]
+    summary: "Порядок предоставления субсидий на 1 кг реализованного и (или) отгруженного молока."
+
+  - filename: "prikaz_msh_krs.txt"
+    title: "Приказ Минсельхоза России о субсидиях на производство мяса крупного рогатого скота мясных пород"
+    short_title: "Приказ Минсельхоза по мясному КРС"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_directions: ["meat", "livestock"]
+    tags: ["beef", "livestock", "subsidy"]
+    summary: "Субсидии на производство мяса КРС специализированных мясных пород."
+
+  - filename: "prikaz_msh_elite_seeds.txt"
+    title: "Приказ Минсельхоза России о субсидиях в области элитного семеноводства"
+    short_title: "Приказ по семеноводству"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_directions: ["crop"]
+    tags: ["seeds", "crop", "subsidy"]
+    summary: "Возмещение части затрат на приобретение элитных семян сельскохозяйственных культур."
+
+  - filename: "prikaz_msh_stavka_ploshad.txt"
+    title: "Приказ Минсельхоза России о ставках на единицу площади (растениеводство)"
+    short_title: "Приказ по площадным субсидиям"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_directions: ["crop"]
+    tags: ["crop", "area_based", "subsidy"]
+    summary: "Поддержка растениеводов: субсидии в расчёте на 1 гектар посевной площади."
+
+  - filename: "prikaz_msh_melioratsia.txt"
+    title: "Приказ Минсельхоза России о поддержке мелиорации земель сельскохозяйственного назначения"
+    short_title: "Приказ по мелиорации"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    tags: ["land", "irrigation", "infrastructure"]
+    summary: "Возмещение части затрат на проведение мелиоративных мероприятий на землях с/х назначения."
+
+  # --- Региональные и специальные меры ---
+  - filename: "regional_template.txt"
+    title: "Типовое положение о региональной государственной программе развития сельского хозяйства"
+    short_title: "Типовая региональная госпрограмма"
+    doc_type: regional_act
+    issuing_body: "Минсельхоз России (методические рекомендации)"
+    tags: ["regional", "framework"]
+    target_farm_types: ["kfh", "lph", "ip", "ooo", "coop"]
+    summary: "Типовая структура и состав региональных программ развития сельского хозяйства, на основе которой субъекты РФ принимают собственные программы."
+
+  - filename: "molodoy_fermer.txt"
+    title: "Положение о грантовой поддержке молодых специалистов на селе"
+    short_title: "Грант «Молодой фермер»"
+    doc_type: ministry_order
+    issuing_body: "Минсельхоз России"
+    target_farm_types: ["kfh", "ip"]
+    tags: ["youth", "beginner", "grant"]
+    summary: "Меры поддержки молодых фермеров и специалистов АПК."
+
+  - filename: "tehnika_subsidy.txt"
+    title: "Положение о субсидиях на возмещение части затрат на приобретение сельскохозяйственной техники"
+    short_title: "Субсидии на технику"
+    doc_type: government_decree
+    issuing_body: "Правительство РФ"
+    target_farm_types: ["kfh", "ip", "ooo", "coop"]
+    tags: ["equipment", "machinery", "subsidy"]
+    summary: "Компенсация части затрат на приобретение сельхозтехники, в том числе через льготный лизинг АО «Росагролизинг»."
+
+  # --- Налоговые льготы ---
+  - filename: "nk_eshn.txt"
+    title: "Глава 26.1 НК РФ «Система налогообложения для сельскохозяйственных товаропроизводителей (единый сельскохозяйственный налог)»"
+    short_title: "ЕСХН (гл. 26.1 НК РФ)"
+    doc_type: tax_code
+    issuing_body: "Государственная Дума РФ"
+    source_url: "http://www.consultant.ru/document/cons_doc_LAW_28165/"
+    target_farm_types: ["kfh", "ip", "ooo", "coop"]
+    tags: ["tax", "eshn"]
+    summary: "Специальный налоговый режим для сельхозпроизводителей: ставка 6% от прибыли, освобождение от ряда налогов."
+
+  - filename: "tax_property_land.txt"
+    title: "Льготы по налогу на имущество и земельному налогу для сельхозпроизводителей"
+    short_title: "Имущественные и земельные льготы"
+    doc_type: tax_code
+    issuing_body: "Государственная Дума РФ; региональные органы"
+    target_farm_types: ["kfh", "lph", "ip", "ooo", "coop"]
+    tags: ["tax", "property", "land"]
+    summary: "Перечень льгот по налогу на имущество организаций и земельному налогу для сельхозпроизводителей; региональные особенности."
