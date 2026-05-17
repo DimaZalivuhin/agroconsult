@@ -191,13 +191,30 @@ class GigaChatClient:
 
     # ---------- Embeddings ----------
     async def embed(self, inputs: list[str], *, model: Optional[str] = None) -> list[list[float]]:
-        """Return embedding vectors for the given input texts."""
+        """Return embedding vectors for the given input texts.
+
+        We always send each text in its OWN request to GigaChat /embeddings.
+        Sending multiple inputs in one request hits the 413 Payload Too Large
+        limit unpredictably (the limit is per-request, not per-input). Doing
+        them sequentially is slower but bulletproof — and on PERS scope it's
+        also single-threaded anyway, so there's no parallelism to lose.
+        """
         if not inputs:
             return []
-        body = {"model": model or settings.gigachat_embeddings_model, "input": inputs}
-        resp = await self._request("POST", "/embeddings", json=body)
-        data = resp.json()
-        return [item["embedding"] for item in data["data"]]
+        chosen_model = model or settings.gigachat_embeddings_model
+        results: list[list[float]] = []
+        for text in inputs:
+            # Belt-and-suspenders: if a single chunk is still gigantic (e.g.
+            # paragraph with no sentence breaks), hard-truncate to ~2000 chars
+            # so we never even try to send a guaranteed-413 payload. 2000 chars
+            # of Russian ≈ 700-800 tokens, well below GigaChat's ~514 limit
+            # combined with JSON overhead being safe.
+            safe_text = text if len(text) <= 1800 else text[:1800]
+            body = {"model": chosen_model, "input": [safe_text]}
+            resp = await self._request("POST", "/embeddings", json=body)
+            data = resp.json()
+            results.append(data["data"][0]["embedding"])
+        return results
 
 
 # Singleton instance used by services
