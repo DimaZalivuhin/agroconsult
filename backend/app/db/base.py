@@ -1,13 +1,8 @@
 """Database engine, session factory and declarative base.
 
-Supabase Transaction Pooler (port 6543) runs PgBouncer in transaction mode.
-PgBouncer doesn't preserve session state, so asyncpg's prepared statements
-collide between requests. Fix:
-
-  1. Use NullPool — let PgBouncer do the pooling.
-  2. statement_cache_size=0 in asyncpg connect_args.
-  3. Pass a per-connection unique prepared_statement_name_func to asyncpg
-     via the `creator` hook so names never clash across multiplexed conns.
+Supabase Transaction Pooler (port 6543) uses PgBouncer in transaction mode,
+which doesn't support asyncpg prepared-statement caching. We disable the cache
+in connect_args and use NullPool to defer pooling to PgBouncer.
 """
 from datetime import datetime
 from typing import AsyncGenerator
@@ -25,6 +20,7 @@ from sqlalchemy.pool import NullPool
 
 from app.core.config import settings
 
+
 _NAMING = {
     "ix": "ix_%(table_name)s_%(column_0_label)s",
     "uq": "uq_%(table_name)s_%(column_0_name)s",
@@ -35,7 +31,56 @@ _NAMING = {
 
 
 class Base(DeclarativeBase):
+    """Declarative base with shared metadata."""
+
     metadata = MetaData(naming_convention=_NAMING)
 
 
-class UU
+class UUIDMixin:
+    """Adds a UUID primary key column."""
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True), primary_key=True, default=uuid4
+    )
+
+
+class TimestampMixin:
+    """Adds created_at and updated_at columns managed by the database."""
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+
+
+engine = create_async_engine(
+    settings.database_url,
+    echo=settings.debug,
+    poolclass=NullPool,
+    connect_args={
+        "statement_cache_size": 0,
+        "prepared_statement_cache_size": 0,
+        "server_settings": {"jit": "off"},
+    },
+)
+
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine, class_=AsyncSession, expire_on_commit=False, autoflush=False
+)
+
+
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """FastAPI dependency that yields an async session and ensures cleanup."""
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()
