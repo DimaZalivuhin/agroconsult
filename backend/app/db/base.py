@@ -1,8 +1,7 @@
 """Database engine, session factory and declarative base.
 
-Supabase Transaction Pooler (port 6543) uses PgBouncer in transaction mode,
-which doesn't support asyncpg prepared-statement caching. We disable the cache
-in connect_args and use NullPool to defer pooling to PgBouncer.
+Connected via Supabase Session Pooler (port 5432). Supports prepared
+statements natively, so we can use SQLAlchemy's standard async pool.
 """
 from datetime import datetime
 from typing import AsyncGenerator
@@ -16,7 +15,6 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy.pool import NullPool
 
 from app.core.config import settings
 
@@ -61,12 +59,9 @@ class TimestampMixin:
 engine = create_async_engine(
     settings.database_url,
     echo=settings.debug,
-    poolclass=NullPool,
-    connect_args={
-        "statement_cache_size": 0,
-        "prepared_statement_cache_size": 0,
-        "server_settings": {"jit": "off"},
-    },
+    pool_pre_ping=True,
+    pool_size=5,
+    max_overflow=10,
 )
 
 AsyncSessionLocal = async_sessionmaker(
