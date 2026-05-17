@@ -52,20 +52,34 @@ class TimestampMixin:
     )
 
 
-# ---------- Engine and session ----------
-# Supabase Transaction Pooler (port 6543) uses PgBouncer which does NOT support
-# asyncpg prepared statements. We disable statement caching and pass a unique
-# prepared-statement name to make asyncpg behave well behind PgBouncer.
-# See: https://magicstack.github.io/asyncpg/current/api/index.html#asyncpg.connection.Connection
+# ----------------------------------------------------------------------
+# Engine for Supabase Transaction Pooler (PgBouncer in transaction mode)
+# ----------------------------------------------------------------------
+# PgBouncer does NOT preserve session state across queries, so it does not
+# support server-side prepared statements. We must:
+#   1. Set `prepared_statement_cache_size=0` (SQLAlchemy-level cache off).
+#   2. Set `statement_cache_size=0` on the asyncpg connection itself.
+#   3. Use unique prepared-statement names per connection (uuid suffix) to
+#      avoid name clashes when PgBouncer multiplexes physical connections.
+#   4. Use NullPool — pgbouncer is the real pool, SQLAlchemy must not pool.
+# Reference: https://magicstack.github.io/asyncpg/current/faq.html#why-am-i-getting-prepared-statement-errors
+import uuid
+
+from sqlalchemy.pool import NullPool
+
+
+def _prepared_statement_name() -> str:
+    return f"__as_{uuid.uuid4().hex}__"
+
+
 engine = create_async_engine(
     settings.database_url,
     echo=settings.debug,
-    pool_pre_ping=True,
-    pool_size=5,
-    max_overflow=10,
+    poolclass=NullPool,
+    prepared_statement_cache_size=0,
     connect_args={
         "statement_cache_size": 0,
-        "prepared_statement_cache_size": 0,
+        "prepared_statement_name_func": _prepared_statement_name,
         "server_settings": {"jit": "off"},
     },
 )
