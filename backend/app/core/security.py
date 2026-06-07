@@ -1,4 +1,6 @@
 """Password hashing and JWT helpers."""
+import base64
+import hashlib
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -9,9 +11,22 @@ from app.core.config import settings
 
 
 def _prepare(password: str) -> bytes:
-    """Hash via SHA-256 so bcrypt's 72-byte limit doesn't truncate input."""
-    import hashlib
+    """Pre-hash with base64(SHA-256) before bcrypt.
 
+    SHA-256 sidesteps bcrypt's 72-byte input limit; base64-encoding the digest
+    avoids the raw digest's NUL bytes, which bcrypt treats as string
+    terminators and would silently truncate the input on.
+    """
+    digest = hashlib.sha256(password.encode("utf-8")).digest()
+    return base64.b64encode(digest)
+
+
+def _prepare_legacy(password: str) -> bytes:
+    """Old scheme: raw SHA-256 digest fed straight to bcrypt.
+
+    Retained only so hashes created before the base64 change still verify;
+    such accounts keep working without a password reset.
+    """
     return hashlib.sha256(password.encode("utf-8")).digest()
 
 
@@ -22,11 +37,15 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    """Return True if plain matches the stored bcrypt hash."""
-    try:
-        return bcrypt.checkpw(_prepare(plain), hashed.encode("utf-8"))
-    except (ValueError, TypeError):
-        return False
+    """Return True if plain matches the stored hash (current or legacy scheme)."""
+    encoded = hashed.encode("utf-8")
+    for prepare in (_prepare, _prepare_legacy):
+        try:
+            if bcrypt.checkpw(prepare(plain), encoded):
+                return True
+        except (ValueError, TypeError):
+            continue
+    return False
 
 
 def create_access_token(

@@ -2,7 +2,7 @@
 from functools import lru_cache
 from typing import List
 
-from pydantic import Field
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -89,6 +89,19 @@ class Settings(BaseSettings):
     @property
     def is_dev(self) -> bool:
         return self.app_env.lower() in ("dev", "development", "local")
+
+    @model_validator(mode="after")
+    def _require_strong_secret_in_prod(self) -> "Settings":
+        """Refuse to boot in production with the default JWT signing key.
+
+        A default SECRET_KEY lets anyone forge access tokens. Outside dev we
+        fail fast so a misconfigured deploy is caught at startup, not exploited.
+        """
+        if not self.is_dev and self.secret_key == "change-me":
+            raise ValueError(
+                "SECRET_KEY must be set to a strong, non-default value in production"
+            )
+        return self
 
 
 @lru_cache
