@@ -118,8 +118,8 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          // Shared
-          "flex flex-col bg-muted/30 border-r",
+          // Shared (solid background so the mobile drawer fully covers content)
+          "flex flex-col bg-muted border-r",
           // Mobile: fixed drawer that slides in from the left
           "fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] transition-transform duration-200 ease-out",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
