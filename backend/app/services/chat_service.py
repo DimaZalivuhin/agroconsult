@@ -73,12 +73,15 @@ async def record_assistant_message(
 
 
 async def list_sessions(db: AsyncSession, user: User, *, limit: int = 50) -> tuple[list[ChatSession], int]:
+    # Hide empty sessions: a session with no messages is a leftover from a
+    # failed consultation attempt and shouldn't clutter the history sidebar.
+    base = (ChatSession.user_id == user.id, ChatSession.message_count > 0)
     total = await db.scalar(
-        select(func.count(ChatSession.id)).where(ChatSession.user_id == user.id)
+        select(func.count(ChatSession.id)).where(*base)
     )
     rows = await db.scalars(
         select(ChatSession)
-        .where(ChatSession.user_id == user.id)
+        .where(*base)
         .order_by(ChatSession.updated_at.desc())
         .limit(limit)
     )

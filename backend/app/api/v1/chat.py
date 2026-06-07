@@ -4,6 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException, status
 
 from app.api.deps import CurrentUser, DbSession
+from app.core.logging import get_logger
 from app.rag.orchestrator import answer_question
 from app.schemas import (
     AnswerResponse,
@@ -26,6 +27,8 @@ from app.services.chat_service import (
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
+log = get_logger("chat")
+
 
 def _profile_dict(profile) -> dict | None:
     if profile is None:
@@ -43,14 +46,28 @@ def _profile_dict(profile) -> dict | None:
 
 @router.post("/ask", response_model=AnswerResponse)
 async def ask(payload: AskRequest, user: CurrentUser, db: DbSession) -> AnswerResponse:
-    """Main consultation endpoint — synchronous (non-streaming) for MVP."""
+    """Main consultation endpoint — synchronous (non-streaming) for MVP.
+
+    The answer is generated BEFORE anything is written to the database. If the
+    RAG pipeline fails (GigaChat/Qdrant unavailable), we return a clean 503 and
+    leave no orphan session or message behind — so failed attempts never pile up
+    in the user's consultation history.
+    """
+    profile_dict = _profile_dict(user.profile)
+    try:
+        result = await answer_question(payload.question, profile=profile_dict)
+    except Exception as exc:  # noqa: BLE001
+        log.error(f"RAG pipeline failed for question {payload.question[:60]!r}: {exc}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Сервис консультаций временно недоступен. Попробуйте позже.",
+        ) from exc
+
+    # Persist only after a successful answer.
     session = await get_or_create_session(
         db, user, payload.session_id, first_question=payload.question
     )
     await record_user_message(db, session, payload.question)
-
-    profile_dict = _profile_dict(user.profile)
-    result = await answer_question(payload.question, profile=profile_dict)
 
     msg = await record_assistant_message(
         db,
